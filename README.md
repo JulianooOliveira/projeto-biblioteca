@@ -1,18 +1,38 @@
-## Getting Started
+## Sistema de Gerenciamento de Biblioteca
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+O sistema deve possuir todas as seguintes funcionalidades. Utilizar MVC e todos os pilares
+de orientação a objetos (Herança, Polimorfismo, Abstração e Encapsulamento), deve conter
+pelo menos uma interface e tratamento de erro.
 
-## Folder Structure
+## Funcionalidades Requeridas
 
-The workspace contains two folders by default, where:
+**Menu**: O menu deve ser completo e de fácil utilização otimizado para rodar via console.
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+**Cadastro de Livros**: O cadastro de livros deve possuir informações como título, autor,
+ano de publicação, número de exemplares disponíveis, entre outros.
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+**Pesquisa de Livros**: O sistema deve ser capaz de buscar de livros por código, título, autor
+ou categoria, facilitando a localização de um livro específico.
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+**Cadastro de Usuários**: O sistema deve possuir um cadastro de usuários, com
+informações como nome, telefone, endereço, e-mail, entre outros.
 
-## Dependency Management
+**Empréstimo de Livros**: O sistema deve possibilitar o empréstimo de livros para usuários
+cadastrados, desde que já não tenha outros livros emprestados, para isso é necessário
+verificar a disponibilidade de exemplares registrar a data de empréstimo e a data de
+devolução prevista.
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+**Devolução de Livros**: A devolução de livros deve atualizar a quantidade de exemplares
+disponíveis, registrar a data de devolução efetiva e calcular automaticamente o número de
+dias em que o livro permaneceu emprestado.
+
+**Atrasos**: O sistema deve registrar todos os livros devolvidos com atraso, organizando-os
+em ordem decrescente de tempo de atraso (do maior para o menor).
+
+**Relatórios**: O sistema deve gerar relatórios com informações relevantes, como: livros
+atualmente emprestados, usuários com devoluções em atraso, livros mais populares, entre
+outros dados importantes.
+
+**Pré-carga**: O sistema deve conter uma classe específica responsável por realizar uma
+pré-carga de dados, inserindo automaticamente cadastros de livros, usuários, empréstimos
+e devoluções, com o objetivo de facilitar os testes do sistema.
