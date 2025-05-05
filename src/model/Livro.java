@@ -1,10 +1,10 @@
 package model;
 
-public class CadastroLivro {
+public abstract class Livro {
     private String titulo, autor;
     private int anoPublicacao, exemplaresDisponiveis;
 
-    public CadastroLivro(String titulo, String autor, int anoPublicacao, int exemplaresDisponiveis) {
+    public Livro(String titulo, String autor, int anoPublicacao, int exemplaresDisponiveis) {
         this.titulo = titulo;
         this.autor = autor;
         this.anoPublicacao = anoPublicacao;
@@ -48,5 +48,7 @@ public class CadastroLivro {
         return "CadastroLivro [titulo=" + titulo + ", autor=" + autor + ", anoPublicacao=" + anoPublicacao
                 + ", exemplaresDisponiveis=" + exemplaresDisponiveis + "]";
     }
+
+    protected abstract boolean add(String livro);
 
 }
