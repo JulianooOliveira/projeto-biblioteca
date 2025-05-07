@@ -11,14 +11,6 @@ public class Biblioteca {
         this.livros = livros;
     }
 
-    public boolean cadastrarLivro(List<Livro> livro){
-        for (Livro l : livros) {
-            livros.add(l);
-            return true;
-        }
-        return false;
-    }
-
     public String getNome() {
         return nome;
     }

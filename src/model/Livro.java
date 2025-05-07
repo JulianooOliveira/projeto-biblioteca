@@ -1,10 +1,11 @@
 package model;
 
-public abstract class Livro {
+public class Livro {
     private String titulo, autor;
-    private int anoPublicacao, exemplaresDisponiveis;
+    private int codigoLivro, proximoCodigo, anoPublicacao, exemplaresDisponiveis;
 
     public Livro(String titulo, String autor, int anoPublicacao, int exemplaresDisponiveis) {
+        this.codigoLivro = proximoCodigo++;
         this.titulo = titulo;
         this.autor = autor;
         this.anoPublicacao = anoPublicacao;
@@ -45,10 +46,9 @@ public abstract class Livro {
 
     @Override
     public String toString() {
-        return "CadastroLivro [titulo=" + titulo + ", autor=" + autor + ", anoPublicacao=" + anoPublicacao
-                + ", exemplaresDisponiveis=" + exemplaresDisponiveis + "]";
+        return "Livro [codigoLivro=" + codigoLivro + ", titulo=" + titulo + ", autor=" + autor + " anoPublicacao="
+                + anoPublicacao + ", exemplaresDisponiveis="
+                + exemplaresDisponiveis + "]";
     }
-
-    protected abstract boolean add(String livro);
 
 }
