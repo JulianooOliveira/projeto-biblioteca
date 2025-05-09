@@ -1,17 +1,17 @@
 package view;
 
 import controller.BibliotecaController;
-import java.util.ArrayList;
 import model.Livro;
+import util.LivroUtils;
 
 public class BibliotecaView {
     public static void main(String[] args) {
-        BibliotecaController controller = new BibliotecaController(new ArrayList<>());
+        BibliotecaController controller = new BibliotecaController(LivroUtils.gerarLivros());
 
-        Livro livro1 = new Livro("titulo", "Autor", 2013, 60);
+        controller.listarLivros().forEach(System.out::println);
+        // System.out.println("Livro encontrado: ");
+        // Livro livroEncontrado = controller.buscarLivro(9);
+        // System.out.println(livroEncontrado);
 
-        controller.addLivro(livro1);
-
-        controller.listarLivros();
     }
 }

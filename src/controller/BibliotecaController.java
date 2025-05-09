@@ -15,19 +15,26 @@ public class BibliotecaController {
         livros.add(livro);
     }
 
-    public void removerLivro(Livro livro) {
-        livros.remove(livro);
+    public boolean removerLivro(int codigoLivro) {
+        return livros.removeIf(l -> l.getCodigoLivro() == codigoLivro);
     }
 
-    public List<String> listarLivros(){
+    public Livro buscarLivro(int codigoLivro) {
         return livros.stream()
-                        .map(l -> l.getTitulo())
-                        .toList();
+                .filter(l -> l.getCodigoLivro() == codigoLivro)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<String> listarLivros() {
+        return livros.stream()
+                .map(Livro::toString)
+                .toList();
     }
 
     @Override
     public String toString() {
-        return "BibliotecaController [livros=" + livros + "]";
+        return "[livros=" + livros + "]";
     };
 
 }

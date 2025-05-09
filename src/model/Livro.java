@@ -2,10 +2,10 @@ package model;
 
 public class Livro {
     private String titulo, autor;
-    private int codigoLivro, proximoCodigo, anoPublicacao, exemplaresDisponiveis;
+    private int codigoLivro, anoPublicacao, exemplaresDisponiveis;
 
-    public Livro(String titulo, String autor, int anoPublicacao, int exemplaresDisponiveis) {
-        this.codigoLivro = proximoCodigo++;
+    public Livro(int codigoLivro, String titulo, String autor, int anoPublicacao, int exemplaresDisponiveis) {
+        this.codigoLivro = codigoLivro;
         this.titulo = titulo;
         this.autor = autor;
         this.anoPublicacao = anoPublicacao;
@@ -42,6 +42,14 @@ public class Livro {
 
     public void setExemplaresDisponiveis(int exemplaresDisponiveis) {
         this.exemplaresDisponiveis = exemplaresDisponiveis;
+    }
+
+    public int getCodigoLivro() {
+        return codigoLivro;
+    }
+
+    public void setCodigoLivro(int codigoLivro) {
+        this.codigoLivro = codigoLivro;
     }
 
     @Override
