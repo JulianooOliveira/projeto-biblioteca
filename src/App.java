@@ -6,8 +6,6 @@ import view.BibliotecaView;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        System.out.println("Livros");
-
         BibliotecaView.main(args);
     }
 }

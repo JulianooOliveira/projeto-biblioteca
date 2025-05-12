@@ -59,4 +59,14 @@ public class Livro {
                 + exemplaresDisponiveis + "]";
     }
 
+    public boolean estaAtrasado() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'estaAtrasado'");
+    }
+
+    public String diasDeAtraso() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'diasDeAtraso'");
+    }
+
 }
