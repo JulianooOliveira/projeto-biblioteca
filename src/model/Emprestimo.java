@@ -3,7 +3,7 @@ package model;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class Emprestimo {
+public class Emprestimo implements Comparable<Emprestimo> {
     private Livro livro;
     private Usuario usuario;
     private LocalDate dataEmprestimo;
@@ -41,5 +41,11 @@ public class Emprestimo {
 
     public boolean estaAtrasado() {
         return diasDeAtraso() > 0;
+    }
+
+    @Override
+    public int compareTo(Emprestimo outro) {
+        // Ordenar do maior atraso para o menor
+        return Long.compare(outro.diasDeAtraso(), this.diasDeAtraso());
     }
 }

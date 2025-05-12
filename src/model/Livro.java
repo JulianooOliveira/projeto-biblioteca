@@ -1,6 +1,6 @@
 package model;
 
-public class Livro {
+public class Livro implements Emprestavel {
     private String titulo, autor;
     private int codigoLivro, anoPublicacao, exemplaresDisponiveis;
 
@@ -10,6 +10,21 @@ public class Livro {
         this.autor = autor;
         this.anoPublicacao = anoPublicacao;
         this.exemplaresDisponiveis = exemplaresDisponiveis;
+    }
+
+    @Override
+    public boolean emprestar() {
+        if (exemplaresDisponiveis > 0) {
+            exemplaresDisponiveis--;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean devolver() {
+        exemplaresDisponiveis++;
+        return true;
     }
 
     public String getTitulo() {
@@ -57,16 +72,6 @@ public class Livro {
         return "Livro [codigoLivro=" + codigoLivro + ", titulo=" + titulo + ", autor=" + autor + " anoPublicacao="
                 + anoPublicacao + ", exemplaresDisponiveis="
                 + exemplaresDisponiveis + "]";
-    }
-
-    public boolean estaAtrasado() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'estaAtrasado'");
-    }
-
-    public String diasDeAtraso() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'diasDeAtraso'");
     }
 
 }

@@ -1,7 +1,6 @@
 package controller;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 
 import model.Emprestimo;
@@ -26,10 +25,9 @@ public class BibliotecaController {
     }
 
     public String emprestarLivro(Livro livro, Usuario usuario) {
-        if (livro.getExemplaresDisponiveis() > 0) {
-            livro.setExemplaresDisponiveis(livro.getExemplaresDisponiveis() - 1);
+        if (livro.emprestar()) {
             LocalDate dataEmprestimo = LocalDate.now();
-            LocalDate dataDevolucao = dataEmprestimo.plusDays(7); // Emprestimo de 7 dias
+            LocalDate dataDevolucao = dataEmprestimo.plusDays(7);
             Emprestimo emprestimo = new Emprestimo(livro, usuario, dataEmprestimo, dataDevolucao);
             emprestimos.add(emprestimo);
             return "Livro emprestado com sucesso! Devolução até: " + dataDevolucao;
@@ -37,19 +35,18 @@ public class BibliotecaController {
         return "Livro indisponível para empréstimo.";
     }
 
-    public String atrasoDevolucao(Livro emprestimo) {
-        if (emprestimo.estaAtrasado()) {
-            return "Atenção! O livro " + emprestimo.getTitulo() + " está com " + emprestimo.diasDeAtraso()
-                    + " dias de atraso.";
-        } else {
-            System.out.println("Nenhum atraso registrado para este empréstimo.");
-        }
-        return null;
+    public String devolverLivro(Livro livro) {
+        livro.devolver();
+        return "Livro devolvido com sucesso!";
     }
 
-    public String devolverLivro(Livro livro) {
-        livro.setExemplaresDisponiveis(livro.getExemplaresDisponiveis() + 1);
-        return "Livro devolvido com sucesso!";
+    public String atrasoDevolucao(Emprestimo emprestimo) {
+        if (emprestimo.estaAtrasado()) {
+            return "Atenção! O livro " + emprestimo.getLivro().getTitulo() +
+                    " está com " + emprestimo.diasDeAtraso() + " dias de atraso.";
+        } else {
+            return "Nenhum atraso registrado para este empréstimo.";
+        }
     }
 
     public Livro buscarLivroId(int codigoLivro) {
@@ -78,13 +75,16 @@ public class BibliotecaController {
                 .toList();
     }
 
+    public List<Livro> getLivros() {
+        return livros;
+    }
+
     @Override
     public String toString() {
         return "[livros=" + livros + "]";
     }
 
-    public Collection<Livro> getEmprestimos() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEmprestimos'");
+    public List<Emprestimo> getEmprestimos() {
+        return emprestimos;
     }
 }
