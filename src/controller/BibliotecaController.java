@@ -4,27 +4,28 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Biblioteca;
 import model.Emprestimo;
 import model.Livro;
 import model.Usuario;
 
 public class BibliotecaController {
-    private List<Livro> livros;
+    private Biblioteca biblioteca;
     private List<Emprestimo> emprestimos;
     private List<Usuario> usuarios;
 
-    public BibliotecaController(List<Livro> livros, List<Emprestimo> emprestimos, List<Usuario> usuarios){
-        this.livros = livros;
+    public BibliotecaController(Biblioteca biblioteca, List<Emprestimo> emprestimos, List<Usuario> usuarios) {
+        this.biblioteca = biblioteca;
         this.emprestimos = emprestimos;
         this.usuarios = usuarios;
     }
 
     public void addLivro(Livro livro) {
-        livros.add(livro);
+        biblioteca.getLivros().add(livro);
     }
 
     public boolean removerLivro(int codigoLivro) {
-        return livros.removeIf(l -> l.getCodigoLivro() == codigoLivro);
+        return biblioteca.getLivros().removeIf(l -> l.getCodigoLivro() == codigoLivro);
     }
 
     public String emprestarLivro(Livro livro, Usuario usuario) {
@@ -70,27 +71,27 @@ public class BibliotecaController {
     }
 
     public Livro buscarLivroId(int codigoLivro) {
-        return livros.stream()
+        return biblioteca.getLivros().stream()
                 .filter(l -> l.getCodigoLivro() == codigoLivro)
                 .findFirst()
                 .orElse(null);
     }
 
     public Livro buscarLivroTitulo(String titulo) {
-        return livros.stream()
+        return biblioteca.getLivros().stream()
                 .filter(l -> l.getTitulo().equalsIgnoreCase(titulo))
                 .findFirst()
                 .orElse(null);
     }
 
     public List<Livro> buscarLivrosAutor(String autor) {
-        return livros.stream()
+        return biblioteca.getLivros().stream()
                 .filter(l -> l.getAutor().equalsIgnoreCase(autor))
                 .toList();
     }
 
     public List<String> listarLivros() {
-        return livros.stream()
+        return biblioteca.getLivros().stream()
                 .map(Livro::toString)
                 .toList();
     }
@@ -100,7 +101,7 @@ public class BibliotecaController {
     }
 
     public List<Livro> getLivros() {
-        return livros;
+        return biblioteca.getLivros();
     }
 
     public List<Usuario> getUsuarios() {
@@ -113,7 +114,6 @@ public class BibliotecaController {
 
     @Override
     public String toString() {
-        return "[livros=" + livros + "]";
+        return "[biblioteca=" + biblioteca.getNome() + ", livros=" + biblioteca.getLivros() + "]";
     }
-
 }

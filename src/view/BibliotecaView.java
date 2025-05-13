@@ -1,6 +1,8 @@
 package view;
 
 import controller.BibliotecaController;
+import controller.UsuarioController;
+import model.Biblioteca;
 import model.Emprestimo;
 import model.Livro;
 import model.Usuario;
@@ -15,10 +17,14 @@ public class BibliotecaView {
         List<Usuario> usuarios = PreCarga.carregarUsuarios();
         List<Emprestimo> emprestimos = PreCarga.carregarEmprestimos(livros, usuarios);
 
-        BibliotecaController controller = new BibliotecaController(livros, emprestimos, usuarios);
+        Biblioteca biblioteca = new Biblioteca("Biblioteca Central", livros);
+        BibliotecaController controller = new BibliotecaController(biblioteca, emprestimos, usuarios);
+        UsuarioController usuarioController = new UsuarioController(usuarios);
         Scanner scanner = new Scanner(System.in);
 
-        Usuario usuarioAtual = usuarios.get(0); // Simula login com o primeiro usuário da lista
+        Usuario usuarioAtual = usuarios.get(0);
+
+        System.out.println("Bem vindo a " + biblioteca.getNome());
 
         int opcao;
         do {
@@ -27,8 +33,8 @@ public class BibliotecaView {
             System.out.println("1. Cadastrar novo livro");
             System.out.println("2. Cadastrar novo usuário");
             System.out.println("3. Listar usuários");
-            System.out.println("4. Deletar livro");
-            System.out.println("5. Listar livros");
+            System.out.println("4. Listar livros");
+            System.out.println("5. Deletar livro");
             System.out.println("6. Listar livros emprestados (do usuário)");
             System.out.println("7. Buscar livro por título");
             System.out.println("8. Buscar livro por código");
@@ -73,18 +79,19 @@ public class BibliotecaView {
                     String email = scanner.nextLine();
                     System.out.print("Telefone: ");
                     String telefone = scanner.nextLine();
-                    int novoCodigoUsuario = controller.getUsuarios().stream()
+
+                    int novoCodigoUsuario = usuarioController.getUsuarios().stream()
                             .mapToInt(Usuario::getCodigoUsuario)
                             .max()
                             .orElse(0) + 1;
 
                     Usuario novoUsuario = new Usuario(novoCodigoUsuario, nome, endereco, email, telefone);
-                    usuarios.add(novoUsuario);
+                    usuarioController.addUsuario(novoUsuario);
                     System.out.println("Usuário cadastrado com sucesso!");
                 }
 
                 case 3 -> {
-                    List<Usuario> todosUsuarios = controller.getUsuarios();
+                    List<Usuario> todosUsuarios = usuarioController.getUsuarios();
                     if (todosUsuarios.isEmpty()) {
                         System.out.println("Nenhum usuário cadastrado.");
                     } else {
@@ -97,14 +104,14 @@ public class BibliotecaView {
                     }
                 }
 
-                case 4 -> {
+                case 4 -> controller.listarLivros().forEach(System.out::println);
+
+                case 5 -> {
                     System.out.print("Digite o código do livro a ser removido: ");
                     int codigo = scanner.nextInt();
                     boolean removido = controller.removerLivro(codigo);
                     System.out.println(removido ? "Livro removido com sucesso!" : "Livro não encontrado.");
                 }
-
-                case 5 -> controller.listarLivros().forEach(System.out::println);
 
                 case 6 -> {
                     List<Emprestimo> emprestimosUsuario = controller.listarEmprestimosDoUsuario(usuarioAtual);
