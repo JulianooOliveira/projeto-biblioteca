@@ -1,6 +1,7 @@
 package controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import model.Emprestimo;
@@ -9,11 +10,13 @@ import model.Usuario;
 
 public class BibliotecaController {
     private List<Livro> livros;
-    private List<Emprestimo> emprestimos; // Lista de empréstimos
+    private List<Emprestimo> emprestimos;
+    private List<Usuario> usuarios;
 
-    public BibliotecaController(List<Livro> livros, List<Emprestimo> emprestimos) {
+    public BibliotecaController(List<Livro> livros, List<Emprestimo> emprestimos, List<Usuario> usuarios){
         this.livros = livros;
         this.emprestimos = emprestimos;
+        this.usuarios = usuarios;
     }
 
     public void addLivro(Livro livro) {
@@ -35,9 +38,20 @@ public class BibliotecaController {
         return "Livro indisponível para empréstimo.";
     }
 
-    public String devolverLivro(Livro livro) {
-        livro.devolver();
-        return "Livro devolvido com sucesso!";
+    public String devolverLivro(Livro livro, Usuario usuario) {
+        Emprestimo emprestimo = emprestimos.stream()
+                .filter(e -> e.getLivro().getCodigoLivro() == livro.getCodigoLivro()
+                        && e.getUsuario().getEmail().equalsIgnoreCase(usuario.getEmail()))
+                .findFirst()
+                .orElse(null);
+
+        if (emprestimo != null) {
+            emprestimos.remove(emprestimo);
+            livro.devolver();
+            return "Livro devolvido com sucesso!";
+        } else {
+            return "Este livro não está emprestado para este usuário.";
+        }
     }
 
     public String atrasoDevolucao(Emprestimo emprestimo) {
@@ -47,6 +61,12 @@ public class BibliotecaController {
         } else {
             return "Nenhum atraso registrado para este empréstimo.";
         }
+    }
+
+    public List<Emprestimo> listarEmprestimosDoUsuario(Usuario usuario) {
+        return emprestimos.stream()
+                .filter(e -> e.getUsuario().getEmail().equalsIgnoreCase(usuario.getEmail()))
+                .toList();
     }
 
     public Livro buscarLivroId(int codigoLivro) {
@@ -75,8 +95,20 @@ public class BibliotecaController {
                 .toList();
     }
 
+    public List<Emprestimo> listarEmprestimosAtivos() {
+        return new ArrayList<>(emprestimos);
+    }
+
     public List<Livro> getLivros() {
         return livros;
+    }
+
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public List<Emprestimo> getEmprestimos() {
+        return emprestimos;
     }
 
     @Override
@@ -84,7 +116,4 @@ public class BibliotecaController {
         return "[livros=" + livros + "]";
     }
 
-    public List<Emprestimo> getEmprestimos() {
-        return emprestimos;
-    }
 }

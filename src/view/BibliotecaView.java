@@ -15,7 +15,7 @@ public class BibliotecaView {
         List<Usuario> usuarios = PreCarga.carregarUsuarios();
         List<Emprestimo> emprestimos = PreCarga.carregarEmprestimos(livros, usuarios);
 
-        BibliotecaController controller = new BibliotecaController(livros, emprestimos);
+        BibliotecaController controller = new BibliotecaController(livros, emprestimos, usuarios);
         Scanner scanner = new Scanner(System.in);
 
         Usuario usuarioAtual = usuarios.get(0); // Simula login com o primeiro usuário da lista
@@ -26,15 +26,17 @@ public class BibliotecaView {
             System.out.println("Usuário logado: " + usuarioAtual.getNome());
             System.out.println("1. Cadastrar novo livro");
             System.out.println("2. Cadastrar novo usuário");
-            System.out.println("3. Deletar livro");
-            System.out.println("4. Listar livros");
-            System.out.println("5. Buscar livro por título");
-            System.out.println("6. Buscar livro por código");
-            System.out.println("7. Buscar livros por autor");
-            System.out.println("8. Emprestar livro");
-            System.out.println("9. Devolver livro");
-            System.out.println("10. Verificar atraso");
-            System.out.println("11. Listar empréstimos atrasados");
+            System.out.println("3. Listar usuários");
+            System.out.println("4. Deletar livro");
+            System.out.println("5. Listar livros");
+            System.out.println("6. Listar livros emprestados (do usuário)");
+            System.out.println("7. Buscar livro por título");
+            System.out.println("8. Buscar livro por código");
+            System.out.println("9. Buscar livros por autor");
+            System.out.println("10. Emprestar livro");
+            System.out.println("11. Devolver livro");
+            System.out.println("12. Verificar atraso");
+            System.out.println("13. Listar empréstimos atrasados");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
@@ -50,7 +52,7 @@ public class BibliotecaView {
                     int ano = scanner.nextInt();
                     System.out.print("Exemplares disponíveis: ");
                     int exemplares = scanner.nextInt();
-                    scanner.nextLine(); // consumir quebra de linha
+                    scanner.nextLine();
 
                     int novoCodigo = controller.getLivros().stream()
                             .mapToInt(Livro::getCodigoLivro)
@@ -71,36 +73,65 @@ public class BibliotecaView {
                     String email = scanner.nextLine();
                     System.out.print("Telefone: ");
                     String telefone = scanner.nextLine();
+                    int novoCodigoUsuario = controller.getUsuarios().stream()
+                            .mapToInt(Usuario::getCodigoUsuario)
+                            .max()
+                            .orElse(0) + 1;
 
-                    Usuario novoUsuario = new Usuario(nome, endereco, email, telefone);
+                    Usuario novoUsuario = new Usuario(novoCodigoUsuario, nome, endereco, email, telefone);
                     usuarios.add(novoUsuario);
                     System.out.println("Usuário cadastrado com sucesso!");
                 }
 
                 case 3 -> {
+                    List<Usuario> todosUsuarios = controller.getUsuarios();
+                    if (todosUsuarios.isEmpty()) {
+                        System.out.println("Nenhum usuário cadastrado.");
+                    } else {
+                        System.out.println("Usuários cadastrados:");
+                        todosUsuarios.forEach(u -> System.out.println(
+                                "Código: " + u.getCodigoUsuario() +
+                                        " | Nome: " + u.getNome() +
+                                        " | Email: " + u.getEmail() +
+                                        " | Telefone: " + u.getTelefone()));
+                    }
+                }
+
+                case 4 -> {
                     System.out.print("Digite o código do livro a ser removido: ");
                     int codigo = scanner.nextInt();
                     boolean removido = controller.removerLivro(codigo);
                     System.out.println(removido ? "Livro removido com sucesso!" : "Livro não encontrado.");
                 }
 
-                case 4 -> controller.listarLivros().forEach(System.out::println);
+                case 5 -> controller.listarLivros().forEach(System.out::println);
 
-                case 5 -> {
+                case 6 -> {
+                    List<Emprestimo> emprestimosUsuario = controller.listarEmprestimosDoUsuario(usuarioAtual);
+                    if (emprestimosUsuario.isEmpty()) {
+                        System.out.println("Você não possui nenhum livro emprestado.");
+                    } else {
+                        System.out.println("Seus livros emprestados:");
+                        emprestimosUsuario.forEach(e -> System.out.println(
+                                e.getLivro().getTitulo() + " - devolução prevista: " + e.getDataDevolucao()));
+                    }
+                }
+
+                case 7 -> {
                     System.out.print("Digite o título: ");
                     String titulo = scanner.nextLine();
                     Livro livro = controller.buscarLivroTitulo(titulo);
                     System.out.println(livro != null ? livro : "Livro não encontrado.");
                 }
 
-                case 6 -> {
+                case 8 -> {
                     System.out.print("Digite o código: ");
                     int codigo = scanner.nextInt();
                     Livro livro = controller.buscarLivroId(codigo);
                     System.out.println(livro != null ? livro : "Livro não encontrado.");
                 }
 
-                case 7 -> {
+                case 9 -> {
                     System.out.print("Digite o autor: ");
                     String autor = scanner.nextLine();
                     List<Livro> encontrados = controller.buscarLivrosAutor(autor);
@@ -111,7 +142,7 @@ public class BibliotecaView {
                     }
                 }
 
-                case 8 -> {
+                case 10 -> {
                     System.out.print("Digite o código do livro para empréstimo: ");
                     int codigo = scanner.nextInt();
                     Livro livro = controller.buscarLivroId(codigo);
@@ -123,18 +154,18 @@ public class BibliotecaView {
                     }
                 }
 
-                case 9 -> {
+                case 11 -> {
                     System.out.print("Digite o código do livro a devolver: ");
                     int codigo = scanner.nextInt();
                     Livro livro = controller.buscarLivroId(codigo);
                     if (livro != null) {
-                        System.out.println(controller.devolverLivro(livro));
+                        System.out.println(controller.devolverLivro(livro, usuarioAtual));
                     } else {
                         System.out.println("Livro não encontrado.");
                     }
                 }
 
-                case 10 -> {
+                case 12 -> {
                     System.out.print("Digite o código do livro para verificar atraso: ");
                     int codigo = scanner.nextInt();
                     Emprestimo emprestimo = controller.getEmprestimos().stream()
@@ -148,7 +179,7 @@ public class BibliotecaView {
                     }
                 }
 
-                case 11 -> {
+                case 13 -> {
                     List<Emprestimo> atrasos = controller.getEmprestimos().stream()
                             .filter(Emprestimo::estaAtrasado)
                             .sorted()
